@@ -1,0 +1,56 @@
+#!/bin/bash
+
+arg0=$0
+
+function help_msg()
+{
+    echo "Usage: ${arg0} [options] [Parameters]"
+    echo "Options:"
+    echo -e "\t-d           use debug mode"
+    echo -e "\t-o path      set output path (default: ./)"
+    echo -e "\t-p platform  set platform listed in the following:"
+    echo -e "\t                 * LINUX"
+    echo -e "\t                 * WIN"
+    echo -e "\t-h           show help msg"
+    echo "Parameters:"
+    echo -e "\tParameters are the parameters for the make command"
+}
+
+make_params=
+
+while getopts ":do:p:h" opt; do
+    case $opt in
+        d)
+            make_params+=" DEBUG=1"
+            ;;
+        o)
+            make_params+=" BINPATH=$OPTARG"
+            ;;
+        p)
+            chosen_platform=" PLATFORM=$OPTARG"
+            ;;
+        h)
+            help_msg
+            exit 1
+            ;;
+        \?)
+            echo "Invalid option: -$OPTARG" >&2
+            exit 1
+            ;;
+        :)
+            echo "Option -$OPTARG requires an argument." >&2
+            exit 1
+            ;;
+    esac
+done
+
+shift $((OPTIND-1))
+
+if [ "x$chosen_platform" == "x" ]
+then
+    make_params+=" PLATFORM=LINUX"
+else
+    make_params+=$chosen_platform
+fi
+
+make $make_params $*

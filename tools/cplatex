@@ -1,0 +1,30 @@
+#!/bin/bash
+
+if [ "$2" == "clean" ]
+then
+    echo ============= clean ================
+    rm -f $1.aux
+    rm -f $1.bbl
+    rm -f $1.blg
+    rm -f $1.log
+    rm -f $1.out
+elif [ "$2" == "open" ]
+then
+    echo ============ open pdf =============
+    open $1.pdf
+else
+    if [ "$2" == "pdflatex" ]
+    then
+        cp=pdflatex
+        echo "use pdflatex"
+    else
+        cp=xelatex
+        echo "use xelatex"
+    fi
+    ${cp} $1
+    bibtex $1
+    ${cp} $1
+    ${cp} $1
+    open $1.pdf
+fi
+

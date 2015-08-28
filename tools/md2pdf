@@ -1,0 +1,17 @@
+#!/bin/bash
+
+if [ "$2" == "clean" ]
+then
+    rm $1.pdf
+elif [ "$2" == "open" ]
+then
+    open $1.pdf
+elif [ "$2" == "narrow" ]
+then
+    pandoc -V geometry:"top=1.27cm, bottom=1.27cm, left=1.27cm, right=1.27cm" $1.md -o $1.pdf
+    open $1.pdf
+else
+    pandoc $1.md -o $1.pdf
+    open $1.pdf
+fi
+
